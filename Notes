@@ -1,0 +1,26 @@
+source: https://www.youtube.com/watch?v=7JwAkW4xzyw
+
+test.unn
+int x;
+int y;
+x = 10;
+y = 20;
+
+if (x) {
+    return y;
+}
+
+while (x) {
+    x = 0;
+}
+
+for (int i; i; i) {
+    do {
+        return 1;
+    }
+}
+
+Keyword: int, char, if, else, while, for, do, return
+Identifiers: Sequence initiated by alphabet/ _ followed by str, int or _
+Numeric Literals: 0-9
+Delimiters: ;,,,(,),{,},[,]
