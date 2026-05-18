@@ -6,22 +6,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Enum for separator token types (Semicolon, Open Parentheses and Closed Parentheses)
+// Enum for separator/ delimiter token types
 typedef enum {
-  SEMI,
+  SEMICOLON,
+  COMMA,
   OPEN_PAREN,
   CLOSE_PAREN,
+  OPEN_BRACE,
+  CLOSE_BRACE,
+  OPEN_BRACKET,
+  CLOSE_BRACKET,
 } TypeSeparator;
 
-// Enum for keyword token types (EXIT)
+// Enum for keyword token types (int, char, if, else, while, for, do, return)
 typedef enum {
-  EXIT,
+  KW_INT,
+  KW_CHAR,
+  KW_IF,
+  KW_ELSE,
+  KW_WHILE,
+  KW_FOR,
+  KW_DO,
+  KW_RETURN,
 } TypeKeyword;
 
 // Enum for literal token types (INT)
 typedef enum {
-  INT,
+  LIT_INT,
 } TypeLiteral;
+
+// Enum for identifier token type
+typedef enum {
+  IDENTIFIER,
+} TypeIdentifier;
 
 // Token struct for keywords, holds its type
 typedef struct {
@@ -38,6 +55,11 @@ typedef struct {
   TypeLiteral type;
   int value;
 } TokenLiteral;
+
+typedef struct {
+  TypeIdentifier type;
+  char name[256];
+} TokenIdentifier;
 
 int main() {
 }
