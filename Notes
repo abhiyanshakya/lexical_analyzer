@@ -1,28 +1,26 @@
-source: 
+Information-source:
 https://www.youtube.com/watch?v=7JwAkW4xzyw
 https://www.youtube.com/watch?v=-4RmhDy0A2s
 
-test.unn
-int x;
-int y;
-x = 10;
-y = 20;
+Requirements:-
+Embedded systems project
+design and implement a lexical analyser for a C-langauge subset.
+maximize speed and minimize space.
+lexical analyser must apply in-depth knowledge of 'pointer arithemetic' and 'state management'.
+    This is done to recognize valid tokens and recover from malformed input streams.
 
-if (x) {
-    return y;
-}
+Language Subset Specifications
+Specified Keywords has been implemented -> // Enum for keyword token types (int, char, if, else, while, for, do, return).
+Specified Identifiers is yet to be implemented!
+Specified Numeric Literals (int) has been implemented -> // Enum for identifier token type (0-9).
+Specified Delimiters has been implemented -> // Enum for separator/ delimiter token types (;,,,(,),{,},[,]).
 
-while (x) {
-    x = 0;
-}
+Complex Token Handling and Error Recovery is yet to be implemented!
 
-for (int i; i; i) {
-    do {
-        return 1;
-    }
-}
+Token Recognition seems to be implemented...
 
-Keyword: int, char, if, else, while, for, do, return
+For each token, need to record exact string match and the token type.
+
+TODO:
+
 Identifiers: Sequence initiated by alphabet/ _ followed by str, int or _
-Numeric Literals: 0-9
-Delimiters: ;,,,(,),{,},[,]

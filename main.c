@@ -2,11 +2,19 @@
 // Created by abhiy on 5/18/2026.
 //
 
+
+/*
+ *I acknowledge the use of
+ *[Anthropic Claude] to assist in the
+ *[Understanding the assignment specification requirements].
+ *I take full responsibility for the integrity, accuracy, and originality of the final submitted code and written content.
+ */
+
 // Standard library headers for I/O and memory allocation
 #include <stdio.h>
 #include <stdlib.h>
 
-// Enum for separator/ delimiter token types
+// Enum for separator/ delimiter token types (;,,,(,),{,},[,])
 typedef enum {
   SEMICOLON,
   COMMA,
@@ -61,5 +69,14 @@ typedef struct {
   char name[256];
 } TokenIdentifier;
 
+void lexer (FILE *file) {
+  char current = fgetc(file);
+
+  while (current != EOF) {
+
+  }
+}
+
 int main() {
+
 }
