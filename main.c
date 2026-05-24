@@ -1,5 +1,5 @@
 //
-// Created by abhiy on 5/18/2026.
+// Created by Abhiyan Shakya (shak0102) on 5/18/2026.
 //
 
 
@@ -69,14 +69,29 @@ typedef struct {
   char name[256];
 } TokenIdentifier;
 
-void lexer (FILE *file) {
-  char current = fgetc(file);
+void lexer (FILE *input, FILE *output) {
+  char current = fgetc(input);
 
   while (current != EOF) {
-
+    printf("%c", current);
+    fprintf(output, "%c", current);
   }
 }
 
 int main() {
+  FILE *input = fopen("test.unn", "r");
+  if (input == NULL) {
+    printf("Failed to Open test.unn\n");
+    return 1;
+  }
+  FILE *output = fopen("output.txt", "w");
+  if (output == NULL) {
+    printf("Failed to open output.txt\n");
+    return 1;
+  }
 
+  lexer(input, output);
+  fclose(input);
+  fclose(output);
+  return 0;
 }

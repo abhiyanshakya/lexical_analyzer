@@ -21,9 +21,11 @@ Token Recognition seems to be implemented...
 
 For each token, need to record exact string match and the token type.
 
-TODO: ?
+TODO: {
+1. I need to design a lexer that reads the int main {} from test.c and prints the output in another file output.tok.
+}
 
-test.unn
+test.c
 int main {
     int x;
     int y;
