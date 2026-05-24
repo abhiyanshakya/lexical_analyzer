@@ -2,7 +2,6 @@
 // Created by Abhiyan Shakya (shak0102) on 5/18/2026.
 //
 
-
 /*
  *I acknowledge the use of
  *[Anthropic Claude] to assist in the
@@ -69,6 +68,13 @@ typedef struct {
   char name[256];
 } TokenIdentifier;
 
+/*
+ *I acknowledge the use of
+ *[OPENAI ChatGPT] to assist in the
+ *[Structuring and debugging the following code].
+ *I take full responsibility for the integrity, accuracy, and originality of the final submitted code and written content.
+ */
+
 void lexer (FILE *input, FILE *output) {
   char current = fgetc(input);
 
@@ -84,6 +90,7 @@ int main() {
     printf("Failed to Open test.unn\n");
     return 1;
   }
+
   FILE *output = fopen("output.txt", "w");
   if (output == NULL) {
     printf("Failed to open output.txt\n");
@@ -91,6 +98,7 @@ int main() {
   }
 
   lexer(input, output);
+
   fclose(input);
   fclose(output);
   return 0;
