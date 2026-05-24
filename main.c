@@ -10,6 +10,7 @@
  */
 
 // Standard library headers for I/O and memory allocation
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,12 +18,12 @@
 typedef enum {
   SEMICOLON,
   COMMA,
-  OPEN_PAREN,
-  CLOSE_PAREN,
-  OPEN_BRACE,
-  CLOSE_BRACE,
-  OPEN_BRACKET,
-  CLOSE_BRACKET,
+  OPEN_PARENTHESIS,
+  CLOSE_PARENTHESIS,
+  OPEN_curlyBRACKET,
+  CLOSE_curlyBRACKET,
+  OPEN_squareBRACKET,
+  CLOSE_squareBRACKET,
 } TypeSeparator;
 
 // Enum for keyword token types (int, char, if, else, while, for, do, return)
@@ -68,38 +69,38 @@ typedef struct {
   char name[256];
 } TokenIdentifier;
 
-/*
- *I acknowledge the use of
- *[OPENAI ChatGPT] to assist in the
- *[Structuring and debugging the following code].
- *I take full responsibility for the integrity, accuracy, and originality of the final submitted code and written content.
- */
-
-void lexer (FILE *input, FILE *output) {
-  char current = fgetc(input);
-
+void lexer (FILE *file) {
+  char current = fgetc (file);
   while (current != EOF) {
-    printf("%c", current);
-    fprintf(output, "%c", current);
+    if (current == ';') {
+      printf("FOUND SEMICOLON\n");
+    } else if (current == ',') {
+      printf("FOUND COMMA\n");
+    } else if (current == '(') {
+      printf("FOUND OPEN PARENTHESIS\n");
+    } else if (current == ')') {
+      printf("FOUND CLOSED PARENTHESIS\n");
+    } else if (current == '{') {
+      printf("FOUND OPEN curlyBRACKET\n");
+    } else if (current == '}') {
+      printf("FOUND CLOSED curlyBRACKET\n");
+    } else if (current == '[') {
+      printf("FOUND OPEN squareBRACKET\n");
+    } else if (current == ']') {
+      printf("FOUND CLOSED squareBRACKET\n");
+    } else if (isdigit(current)) {
+      printf("FOUND DIGIT: %d\n", current - '0');
+    } else if (isalpha(current)) {
+      printf("FOUND CHARACTER: %c\n", current);
+    }
+    current = fgetc (file);
   }
 }
 
 int main() {
-  FILE *input = fopen("test.unn", "r");
-  if (input == NULL) {
-    printf("Failed to Open test.unn\n");
-    return 1;
+  FILE *file = fopen("test.unn", "r");
+  if (file == NULL) {
+    printf ("Not able to open the file.");
   }
-
-  FILE *output = fopen("output.txt", "w");
-  if (output == NULL) {
-    printf("Failed to open output.txt\n");
-    return 1;
-  }
-
-  lexer(input, output);
-
-  fclose(input);
-  fclose(output);
-  return 0;
+  lexer(file);
 }
