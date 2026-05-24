@@ -69,38 +69,43 @@ typedef struct {
   char name[256];
 } TokenIdentifier;
 
-void lexer (FILE *file) {
-  char current = fgetc (file);
+int main() {
+
+  FILE *input = fopen("test.unn", "r");
+  if (input == NULL) {
+    printf ("Not able to open the file.");
+    return 1;
+  }
+
+  FILE *file = fopen("output.txt", "w");
+  FILE *output = fopen("output.txt", "a");
+  char current = fgetc (input);
   while (current != EOF) {
     if (current == ';') {
-      printf("FOUND SEMICOLON\n");
+      fprintf(output, "\nFOUND SEMICOLON");
     } else if (current == ',') {
-      printf("FOUND COMMA\n");
+      fprintf(output, "\nFOUND COMMA");
     } else if (current == '(') {
-      printf("FOUND OPEN PARENTHESIS\n");
+      fprintf(output, "\nFOUND OPEN PARENTHESIS");
     } else if (current == ')') {
-      printf("FOUND CLOSED PARENTHESIS\n");
+      fprintf(output, "\nFOUND CLOSED PARENTHESIS");
     } else if (current == '{') {
-      printf("FOUND OPEN curlyBRACKET\n");
+      fprintf(output, "\nFOUND OPEN curlyBRACKET");
     } else if (current == '}') {
-      printf("FOUND CLOSED curlyBRACKET\n");
+      fprintf(output, "\nFOUND CLOSED curlyBRACKET");
     } else if (current == '[') {
-      printf("FOUND OPEN squareBRACKET\n");
+      fprintf(output, "\nFOUND OPEN squareBRACKET");
     } else if (current == ']') {
-      printf("FOUND CLOSED squareBRACKET\n");
+      fprintf(output, "\nFOUND CLOSED squareBRACKET");
     } else if (isdigit(current)) {
-      printf("FOUND DIGIT: %d\n", current - '0');
+      fprintf(output, "\nFOUND DIGIT: %d", current - '0');
     } else if (isalpha(current)) {
-      printf("FOUND CHARACTER: %c\n", current);
+      fprintf(output, "\nFOUND CHARACTER: %c", current);
     }
-    current = fgetc (file);
+    current = fgetc (input);
   }
-}
 
-int main() {
-  FILE *file = fopen("test.unn", "r");
-  if (file == NULL) {
-    printf ("Not able to open the file.");
-  }
-  lexer(file);
+  fclose(input);
+  fclose(output);
+  return 0;
 }
