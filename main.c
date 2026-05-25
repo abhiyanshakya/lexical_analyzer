@@ -7,13 +7,25 @@
  *[Anthropic Claude] to assist in the
  *[Understanding the assignment specification requirements].
  *I take full responsibility for the integrity, accuracy, and originality of the final submitted code and written content.
- *The link to full conversation with AI (Anthropic Claude): https://claude.ai/share/d11192d8-365a-4044-98ea-f851f8722500
+ *The link to full conversation with AI (Anthropic Claude):
  */
 
 // Standard library headers for I/O and memory allocation
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+/**
+ * new_code
+ */
+typedef enum {
+  STATE_START,
+  STATE_IN_WORD, //read letters/ _
+  STATE_IN_NUMBER, //read digits
+  STATE_ERROR,
+  STATE_ACCEPT,
+} State;
 
 // Enum for Separator/Delimiter token types (;,,,(,),{,},[,])
 typedef enum {
@@ -71,36 +83,196 @@ typedef struct {
   char name[256];
 } TokenIdentifier;
 
+/**
+ *
+ * @param input
+ * @param append
+ *
+ * new_code
+ */
 void lexer(FILE *input, FILE *append) {
+  State state = STATE_START;
+  char buffer[256];
+  int i = 0;
   char current = fgetc(input);
 
   while (current != EOF) {
-    if (current == ';') {
-      fprintf(stdout, "\nFOUND SEMICOLON");
-      fprintf(append, "\nFOUND SEMICOLON");
-    } else if (current == ',') {
-      fprintf(stdout, "\nFOUND COMMA");
-      fprintf(append, "\nFOUND COMMA");
-    } else if (current == '(') {
-      fprintf(stdout, "\nFOUND OPEN PARENTHESIS");
-      fprintf(append, "\nFOUND OPEN PARENTHESIS");
-    } else if (current == ')') {
-      fprintf(stdout, "\nFOUND CLOSED PARENTHESIS");
-      fprintf(append, "\nFOUND CLOSED PARENTHESIS");
-    } else if (current == '{') {
-      fprintf(stdout, "\nFOUND OPEN CURLYBRACKET");
-      fprintf(append, "\nFOUND OPEN CURLYBRACKET");
-    } else if (current == '}') {
-      fprintf(stdout, "\nFOUND CLOSED CURLYBRACKET");
-      fprintf(append, "\nFOUND CLOSED CURLYBRACKET");
-    } else if (current == '[') {
-      fprintf(stdout, "\nFOUND OPEN SQUAREBRACKET");
-      fprintf(append, "\nFOUND OPEN SQUAREBRACKET");
-    } else if (current == ']') {
-      fprintf(stdout, "\nFOUND CLOSED SQUAREBRACKET");
-      fprintf(append, "\nFOUND CLOSED SQUAREBRACKET");
+    switch (state) {
+      case STATE_START:
+        if (isalpha(current) || current == '_') {
+          buffer[i++] = current;
+          state = STATE_IN_WORD;
+          current = fgetc(input);
+        } else if (isdigit(current)) {
+          buffer[i++] = current;
+          state = STATE_IN_NUMBER;
+          current = fgetc(input);
+        } else if (isspace(current)) {
+          current = fgetc(input);
+        } else if (current == ';') {
+          TokenSeparator *token = malloc(sizeof(TokenSeparator));
+          token->type = SEMICOLON;
+          fprintf(stdout, "\n<DELIMITER, ;>");
+          fprintf(append, "\n<DELIMITER, ;>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == ',') {
+          TokenSeparator *token = malloc(sizeof(TokenSeparator));
+          token->type = COMMA;
+          fprintf(stdout, "\n<DELIMITER, ,>");
+          fprintf(append, "\n<DELIMITER, ,>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '(') {
+          TokenSeparator *token = malloc(sizeof(TokenSeparator));
+          token->type = OPEN_PARENTHESIS;
+          fprintf(stdout, "\n<DELIMITER, (>");
+          fprintf(append, "\n<DELIMITER, (>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == ')') {
+          TokenSeparator *token = malloc(sizeof(TokenSeparator));
+          token->type = CLOSE_PARENTHESIS;
+          fprintf(stdout, "\n<DELIMITER, )>");
+          fprintf(append, "\n<DELIMITER, )>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '{') {
+          TokenSeparator *token = malloc(sizeof(TokenSeparator));
+          token->type = OPEN_CURLYBRACKET;
+          fprintf(stdout, "\n<DELIMITER, {>");
+          fprintf(append, "\n<DELIMITER, {>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '}') {
+          TokenSeparator *token = malloc(sizeof(TokenSeparator));
+          token->type = CLOSE_CURLYBRACKET;
+          fprintf(stdout, "\n<DELIMITER, }>");
+          fprintf(append, "\n<DELIMITER, }>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '[') {
+          TokenSeparator *token = malloc(sizeof(TokenSeparator));
+          token->type = OPEN_SQUAREBRACKET;
+          fprintf(stdout, "\n<DELIMITER, [>");
+          fprintf(append, "\n<DELIMITER, [>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == ']') {
+          TokenSeparator *token = malloc(sizeof(TokenSeparator));
+          token->type = CLOSE_SQUAREBRACKET;
+          fprintf(stdout, "\n<DELIMITER, ]>");
+          fprintf(append, "\n<DELIMITER, ]>");
+          free(token);
+          current = fgetc(input);
+        } else {
+          state = STATE_ERROR;
+        }
+        break;
+
+      case STATE_IN_WORD:
+        if (isalpha(current) || isdigit(current) || current == '_') {
+          buffer[i++] = current;
+          current = fgetc(input);
+        } else {
+          buffer[i] = '\0';
+          i = 0;
+          if (strcmp(buffer, "int") == 0) {
+            TokenKeyword *token = malloc(sizeof(TokenKeyword));
+            token->type = KW_INT;
+            fprintf(stdout, "\n<KEYWORD, int>");
+            fprintf(append, "\n<KEYWORD, int>");
+            free(token);
+          } else if (strcmp(buffer, "char") == 0) {
+            TokenKeyword *token = malloc(sizeof(TokenKeyword));
+            token->type = KW_CHAR;
+            fprintf(stdout, "\n<KEYWORD, char>");
+            fprintf(append, "\n<KEYWORD, char>");
+            free(token);
+          } else if (strcmp(buffer, "if") == 0) {
+            TokenKeyword *token = malloc(sizeof(TokenKeyword));
+            token->type = KW_IF;
+            fprintf(stdout, "\n<KEYWORD, if>");
+            fprintf(append, "\n<KEYWORD, if>");
+            free(token);
+          } else if (strcmp(buffer, "else") == 0) {
+            TokenKeyword *token = malloc(sizeof(TokenKeyword));
+            token->type = KW_ELSE;
+            fprintf(stdout, "\n<KEYWORD, else>");
+            fprintf(append, "\n<KEYWORD, else>");
+            free(token);
+          } else if (strcmp(buffer, "while") == 0) {
+            TokenKeyword *token = malloc(sizeof(TokenKeyword));
+            token->type = KW_WHILE;
+            fprintf(stdout, "\n<KEYWORD, while>");
+            fprintf(append, "\n<KEYWORD, while>");
+            free(token);
+          } else if (strcmp(buffer, "for") == 0) {
+            TokenKeyword *token = malloc(sizeof(TokenKeyword));
+            token->type = KW_FOR;
+            fprintf(stdout, "\n<KEYWORD, for>");
+            fprintf(append, "\n<KEYWORD, for>");
+            free(token);
+          } else if (strcmp(buffer, "do") == 0) {
+            TokenKeyword *token = malloc(sizeof(TokenKeyword));
+            token->type = KW_DO;
+            fprintf(stdout, "\n<KEYWORD, do>");
+            fprintf(append, "\n<KEYWORD, do>");
+            free(token);
+          } else if (strcmp(buffer, "return") == 0) {
+            TokenKeyword *token = malloc(sizeof(TokenKeyword));
+            token->type = KW_RETURN;
+            fprintf(stdout, "\n<KEYWORD, return>");
+            fprintf(append, "\n<KEYWORD, return>");
+            free(token);
+          } else {
+            TokenIdentifier *token = malloc(sizeof(TokenIdentifier));
+            token->type = IDENTIFIER;
+            // pointer arithmetic to copy buffer into token name
+            char *src = buffer;
+            char *dst = token->name;
+            while (*src != '\0') {
+              *dst++ = *src++;
+            }
+            *dst = '\0';
+            fprintf(stdout, "\n<IDENTIFIER, %s>", token->name);
+            fprintf(append, "\n<IDENTIFIER, %s>", token->name);
+            free(token);
+          }
+          state = STATE_START;
+        }
+        break;
+
+      case STATE_IN_NUMBER:
+        if (isdigit(current)) {
+          buffer[i++] = current;
+          current = fgetc(input);
+        } else {
+          buffer[i] = '\0';
+          i = 0;
+          TokenLiteral *token = malloc(sizeof(TokenLiteral));
+          token->type = LIT_INT;
+          token->value = atoi(buffer);
+          fprintf(stdout, "\n<INTEGER, %d>", token->value);
+          fprintf(append, "\n<INTEGER, %d>", token->value);
+          free(token);
+          state = STATE_START;
+        }
+        break;
+
+      case STATE_ERROR:
+        fprintf(stdout, "\n<ERROR, unrecognised character: '%c'>", current);
+        fprintf(append, "\n<ERROR, unrecognised character: '%c'>", current);
+        while (current != EOF && !isspace(current) &&
+               current != ';' && current != ',' &&
+               current != '(' && current != ')' &&
+               current != '{' && current != '}' &&
+               current != '[' && current != ']') {
+          current = fgetc(input);
+        }
+        state = STATE_START;
+        break;
     }
-    current = fgetc (input);
   }
 }
 
