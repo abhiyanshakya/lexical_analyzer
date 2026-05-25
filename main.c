@@ -24,6 +24,7 @@ typedef enum {
   STATE_IN_WORD, //read letters/ _
   STATE_IN_NUMBER, //read digits
   STATE_ERROR,
+  STATE_IN_ASSIGN,
   STATE_ACCEPT,
 } State;
 
@@ -56,6 +57,18 @@ typedef enum {
   LIT_INT,
 } TypeLiteral;
 
+// Enum for Operator token types (+, -, *, /, =, <, >, ==)
+typedef enum {
+  OP_PLUS,
+  OP_MINUS,
+  OP_MULTIPLY,
+  OP_DIVIDE,
+  OP_ASSIGN,
+  OP_LESS,
+  OP_GREATER,
+  OP_EQUAL,
+} TypeOperator;
+
 // Enum for identifier token type (Sequences starting with an alphabet letter or underscore followed by letters, digits, or underscores)
 typedef enum {
   IDENTIFIER,
@@ -76,6 +89,11 @@ typedef struct {
   TypeLiteral type;
   int value;
 } TokenLiteral;
+
+// Token struct for operators, holds its type
+typedef struct {
+  TypeOperator type;
+} TokenOperator;
 
 // Token struct for Identifier, hold its type and
 typedef struct {
@@ -165,10 +183,55 @@ void lexer(FILE *input, FILE *append) {
           fprintf(append, "\n<DELIMITER, ]>");
           free(token);
           current = fgetc(input);
+        } else if (current == '+') {
+          TokenOperator *token = malloc(sizeof(TokenOperator));
+          token->type = OP_PLUS;
+          fprintf(stdout, "\n<OPERATOR, +>");
+          fprintf(append, "\n<OPERATOR, +>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '-') {
+          TokenOperator *token = malloc(sizeof(TokenOperator));
+          token->type = OP_MINUS;
+          fprintf(stdout, "\n<OPERATOR, ->");
+          fprintf(append, "\n<OPERATOR, ->");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '*') {
+          TokenOperator *token = malloc(sizeof(TokenOperator));
+          token->type = OP_MULTIPLY;
+          fprintf(stdout, "\n<OPERATOR, *>");
+          fprintf(append, "\n<OPERATOR, *>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '/') {
+          TokenOperator *token = malloc(sizeof(TokenOperator));
+          token->type = OP_DIVIDE;
+          fprintf(stdout, "\n<OPERATOR, />");
+          fprintf(append, "\n<OPERATOR, />");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '<') {
+          TokenOperator *token = malloc(sizeof(TokenOperator));
+          token->type = OP_LESS;
+          fprintf(stdout, "\n<OPERATOR, <>");
+          fprintf(append, "\n<OPERATOR, <>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '>') {
+          TokenOperator *token = malloc(sizeof(TokenOperator));
+          token->type = OP_GREATER;
+          fprintf(stdout, "\n<OPERATOR, >>");
+          fprintf(append, "\n<OPERATOR, >>");
+          free(token);
+          current = fgetc(input);
+        } else if (current == '=') {
+          // could be '=' or '==' — transition to STATE_IN_ASSIGN
+          state = STATE_IN_ASSIGN;
+          current = fgetc(input);
         } else {
           state = STATE_ERROR;
-        }
-        break;
+        } break;
 
       case STATE_IN_WORD:
         if (isalpha(current) || isdigit(current) || current == '_') {
@@ -259,6 +322,27 @@ void lexer(FILE *input, FILE *append) {
           state = STATE_START;
         }
         break;
+
+      case STATE_IN_ASSIGN:
+        if (current == '=') {
+          // it is '=='
+          TokenOperator *token = malloc(sizeof(TokenOperator));
+          token->type = OP_EQUAL;
+          fprintf(stdout, "\n<OPERATOR, ==>");
+          fprintf(append, "\n<OPERATOR, ==>");
+          free(token);
+          current = fgetc(input);
+        } else {
+          // it is just '='
+          TokenOperator *token = malloc(sizeof(TokenOperator));
+          token->type = OP_ASSIGN;
+          fprintf(stdout, "\n<OPERATOR, =>");
+          fprintf(append, "\n<OPERATOR, =>");
+          free(token);
+          // do NOT call fgetc — current is the next unprocessed char
+        }
+      state = STATE_START;
+      break;
 
       case STATE_ERROR:
         fprintf(stdout, "\n<ERROR, unrecognised character: '%c'>", current);

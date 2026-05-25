@@ -11,15 +11,15 @@
 <IDENTIFIER, c>
 <DELIMITER, ;>
 <IDENTIFIER, a>
-<ERROR, unrecognised character: '='>
+<OPERATOR, =>
 <INTEGER, 5>
 <DELIMITER, ;>
 <IDENTIFIER, b>
-<ERROR, unrecognised character: '='>
+<OPERATOR, =>
 <INTEGER, 0>
 <DELIMITER, ;>
 <IDENTIFIER, c>
-<ERROR, unrecognised character: '='>
+<OPERATOR, =>
 <INTEGER, 30>
 <DELIMITER, ;>
 <KEYWORD, if>
@@ -29,9 +29,9 @@
 <IDENTIFIER, b>
 <DELIMITER, {>
 <IDENTIFIER, b>
-<ERROR, unrecognised character: '='>
+<OPERATOR, =>
 <IDENTIFIER, b>
-<ERROR, unrecognised character: '+'>
+<OPERATOR, +>
 <INTEGER, 1>
 <DELIMITER, ;>
 <DELIMITER, }>
@@ -39,7 +39,7 @@
 <IDENTIFIER, i>
 <DELIMITER, {>
 <IDENTIFIER, _counter>
-<ERROR, unrecognised character: '='>
+<OPERATOR, =>
 <IDENTIFIER, i>
 <DELIMITER, ;>
 <DELIMITER, }>
@@ -49,9 +49,9 @@
 <KEYWORD, do>
 <DELIMITER, {>
 <IDENTIFIER, a>
-<ERROR, unrecognised character: '='>
+<OPERATOR, =>
 <IDENTIFIER, a>
-<ERROR, unrecognised character: '+'>
+<OPERATOR, +>
 <INTEGER, 1>
 <DELIMITER, ;>
 <DELIMITER, }>
