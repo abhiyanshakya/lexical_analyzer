@@ -15,16 +15,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Enum for separator/ delimiter token types (;,,,(,),{,},[,])
+// Enum for Separator/Delimiter token types (;,,,(,),{,},[,])
 typedef enum {
   SEMICOLON,
   COMMA,
   OPEN_PARENTHESIS,
   CLOSE_PARENTHESIS,
-  OPEN_curlyBRACKET,
-  CLOSE_curlyBRACKET,
-  OPEN_squareBRACKET,
-  CLOSE_squareBRACKET,
+  OPEN_CURLYBRACKET,
+  CLOSE_CURLYBRACKET,
+  OPEN_SQUAREBRACKET,
+  CLOSE_SQUAREBRACKET,
 } TypeSeparator;
 
 // Enum for keyword token types (int, char, if, else, while, for, do, return)
@@ -39,12 +39,12 @@ typedef enum {
   KW_RETURN,
 } TypeKeyword;
 
-// Enum for literal token types (INT)
+// Enum for literal token types (0,1,2,3,4,5,6,7,8,9)
 typedef enum {
   LIT_INT,
 } TypeLiteral;
 
-// Enum for identifier token type
+// Enum for identifier token type (Sequences starting with an alphabet letter or underscore followed by letters, digits, or underscores)
 typedef enum {
   IDENTIFIER,
 } TypeIdentifier;
@@ -65,48 +65,59 @@ typedef struct {
   int value;
 } TokenLiteral;
 
+// Token struct for Identifier, hold its type and
 typedef struct {
   TypeIdentifier type;
   char name[256];
 } TokenIdentifier;
 
-int main() {
+void lexer(FILE *input, FILE *append) {
+  char current = fgetc(input);
 
-  FILE *input = fopen("test.c", "r");
-  if (input == NULL) {
-    printf ("Not able to open the file.");
-    return 1;
-  }
-
-  FILE *file = fopen("output.txt", "w");
-  FILE *output = fopen("output.txt", "a");
-  char current = fgetc (input);
   while (current != EOF) {
     if (current == ';') {
-      fprintf(output, "\nFOUND SEMICOLON");
+      fprintf(stdout, "\nFOUND SEMICOLON");
+      fprintf(append, "\nFOUND SEMICOLON");
     } else if (current == ',') {
-      fprintf(output, "\nFOUND COMMA");
+      fprintf(stdout, "\nFOUND COMMA");
+      fprintf(append, "\nFOUND COMMA");
     } else if (current == '(') {
-      fprintf(output, "\nFOUND OPEN PARENTHESIS");
+      fprintf(stdout, "\nFOUND OPEN PARENTHESIS");
+      fprintf(append, "\nFOUND OPEN PARENTHESIS");
     } else if (current == ')') {
-      fprintf(output, "\nFOUND CLOSED PARENTHESIS");
+      fprintf(stdout, "\nFOUND CLOSED PARENTHESIS");
+      fprintf(append, "\nFOUND CLOSED PARENTHESIS");
     } else if (current == '{') {
-      fprintf(output, "\nFOUND OPEN CURLY BRACKET");
+      fprintf(stdout, "\nFOUND OPEN CURLYBRACKET");
+      fprintf(append, "\nFOUND OPEN CURLYBRACKET");
     } else if (current == '}') {
-      fprintf(output, "\nFOUND CLOSED CURLY BRACKET");
+      fprintf(stdout, "\nFOUND CLOSED CURLYBRACKET");
+      fprintf(append, "\nFOUND CLOSED CURLYBRACKET");
     } else if (current == '[') {
-      fprintf(output, "\nFOUND OPEN SQUARE BRACKET");
+      fprintf(stdout, "\nFOUND OPEN SQUAREBRACKET");
+      fprintf(append, "\nFOUND OPEN SQUAREBRACKET");
     } else if (current == ']') {
-      fprintf(output, "\nFOUND CLOSED SQUARE BRACKET");
-    } else if (isdigit(current)) {
-      fprintf(output, "\nFOUND DIGIT: %d", current - '0');
-    } else if (isalpha(current)) {
-      fprintf(output, "\nFOUND CHARACTER: %c", current);
+      fprintf(stdout, "\nFOUND CLOSED SQUAREBRACKET");
+      fprintf(append, "\nFOUND CLOSED SQUAREBRACKET");
     }
     current = fgetc (input);
   }
+}
 
+int main() {
+  FILE *input = fopen("test.c", "r");
+  if (input == NULL) {
+    printf ("Not able to read anything.");
+    return 1;
+  }
+  FILE *output = fopen("output.txt", "w");
+  if (output == NULL) {
+    printf("Note able to write anything.");
+  }
+  FILE *append = fopen("output.txt", "a");
+  lexer(input, append);
   fclose(input);
   fclose(output);
+  fclose(append);
   return 0;
 }
