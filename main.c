@@ -7,6 +7,7 @@
  *[Anthropic Claude] to assist in the
  *[Understanding the assignment specification requirements].
  *I take full responsibility for the integrity, accuracy, and originality of the final submitted code and written content.
+ *The link to full conversation with AI (Anthropic Claude): https://claude.ai/share/d11192d8-365a-4044-98ea-f851f8722500
  */
 
 // Standard library headers for I/O and memory allocation
@@ -71,7 +72,7 @@ typedef struct {
 
 int main() {
 
-  FILE *input = fopen("test.unn", "r");
+  FILE *input = fopen("test.c", "r");
   if (input == NULL) {
     printf ("Not able to open the file.");
     return 1;
@@ -90,13 +91,13 @@ int main() {
     } else if (current == ')') {
       fprintf(output, "\nFOUND CLOSED PARENTHESIS");
     } else if (current == '{') {
-      fprintf(output, "\nFOUND OPEN curlyBRACKET");
+      fprintf(output, "\nFOUND OPEN CURLY BRACKET");
     } else if (current == '}') {
-      fprintf(output, "\nFOUND CLOSED curlyBRACKET");
+      fprintf(output, "\nFOUND CLOSED CURLY BRACKET");
     } else if (current == '[') {
-      fprintf(output, "\nFOUND OPEN squareBRACKET");
+      fprintf(output, "\nFOUND OPEN SQUARE BRACKET");
     } else if (current == ']') {
-      fprintf(output, "\nFOUND CLOSED squareBRACKET");
+      fprintf(output, "\nFOUND CLOSED SQUARE BRACKET");
     } else if (isdigit(current)) {
       fprintf(output, "\nFOUND DIGIT: %d", current - '0');
     } else if (isalpha(current)) {
