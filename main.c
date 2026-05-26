@@ -5,7 +5,7 @@
 /**
  *I acknowledge the use of
  *[Anthropic Claude] to assist in the
- *[Understanding the assignment specification requirements].
+ *[Understanding the assignment specification requirements and idea generation].
  *I take full responsibility for the integrity, accuracy, and originality of the final submitted code and written content.
  *The link to full conversation with AI (Anthropic Claude): https://claude.ai/share/1227f8ea-1158-40d5-9e01-c723eb919560
  */
